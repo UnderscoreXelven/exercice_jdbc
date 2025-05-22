@@ -30,6 +30,7 @@ public class IHM {
                 case 5 -> removeStudent();
             }
         }
+        sc.close();
     }
 
     private static void stop(){stop = true;}
