@@ -105,7 +105,7 @@ public class IHM {
                 System.out.print("Prénom de l'étudiant : "+resultSet.getString("first_name"));
                 System.out.print(" | Nom de l'étudiant : "+resultSet.getString("last_name"));
                 System.out.print(" | Classe : "+resultSet.getInt("class_number"));
-                System.out.print(" | Date d'obtention du diplôme"+resultSet.getString("graduation_date"));
+                System.out.print(" | Date d'obtention du diplôme : "+resultSet.getString("graduation_date"));
             }
 
             connection.close();
@@ -124,8 +124,8 @@ public class IHM {
 
             String request = "SELECT * FROM etudiant WHERE class_number = ? ";
             PreparedStatement preparedStatement = connection.prepareStatement(request);
-            preparedStatement.setInt(1, 1);
-            ResultSet resultSet = preparedStatement.executeQuery(request);
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
             System.out.println("Liste des étudiants de la classe "+id+" : ");
 
@@ -133,7 +133,7 @@ public class IHM {
                 System.out.print("Prénom de l'étudiant : "+resultSet.getString("first_name"));
                 System.out.print(" | Nom de l'étudiant : "+resultSet.getString("last_name"));
                 System.out.print(" | Classe : "+resultSet.getInt("class_number"));
-                System.out.print(" | Date d'obtention du diplôme"+resultSet.getString("graduation_date"));
+                System.out.println(" | Date d'obtention du diplôme : "+resultSet.getString("graduation_date"));
             }
         }catch (SQLException e){
             System.out.println(e.getMessage());
@@ -151,7 +151,7 @@ public class IHM {
             String request = "DELETE FROM etudiant WHERE id=?";
             PreparedStatement preparedStatement = connection.prepareStatement(request);
             preparedStatement.setInt(1, id);
-            preparedStatement.executeQuery();
+            preparedStatement.execute();
             System.out.println("Etudiant "+id+" a été supprimé");
 
             connection.close();
