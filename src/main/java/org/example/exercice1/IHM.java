@@ -1,5 +1,6 @@
 package org.example.exercice1;
 
+import org.example.exercice1.entity.Student;
 import org.example.exercice1.utils.ConnectionUtils;
 
 import java.sql.*;
@@ -44,7 +45,7 @@ public class IHM {
             String lastName = sc.nextLine();
 
             System.out.println("Prénom de l'étudiant : ");
-            String first_name = sc.nextLine();
+            String firstName = sc.nextLine();
 
             System.out.println("Numéro de classe de l'étudiant : ");
             int classNumber = sc.nextInt();
@@ -53,13 +54,23 @@ public class IHM {
             System.out.println("Date d'obtention du diplôme :");
             String graduationDate = sc.nextLine();
 
+            Student student = new Student(firstName, lastName, graduationDate, classNumber);
+
             String request = "INSERT INTO etudiant(first_name, last_name, class_number, graduation_date) VALUES (?,?,?,?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(request);
-            preparedStatement.setString(1, first_name);
-            preparedStatement.setString(2, lastName);
-            preparedStatement.setInt(3, classNumber);
-            preparedStatement.setString(4, graduationDate);
-            preparedStatement.executeUpdate();
+            PreparedStatement preparedStatement = connection.prepareStatement(request, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1, student.getFirstName());
+            preparedStatement.setString(2, student.getLastName());
+            preparedStatement.setInt(3, student.getClassNumber());
+            preparedStatement.setString(4, student.getGraduationDate());
+            int nbRows = preparedStatement.executeUpdate();
+            ResultSet resultSet = preparedStatement.getGeneratedKeys();
+            System.out.println(student);
+
+            if(resultSet.next()){
+                student.setId(resultSet.getInt(1));
+            }
+
+            System.out.println(student);
             System.out.println("Etudiant ajouté !");
             connection.close();
         }catch (SQLException e){
@@ -152,7 +163,7 @@ public class IHM {
             String request = "DELETE FROM etudiant WHERE id=?";
             PreparedStatement preparedStatement = connection.prepareStatement(request);
             preparedStatement.setInt(1, id);
-            preparedStatement.execute();
+            preparedStatement.executeQuery();
             System.out.println("Etudiant "+id+" a été supprimé");
 
             connection.close();
